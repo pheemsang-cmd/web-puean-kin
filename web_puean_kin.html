@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เว็บเพื่อนกิน</title>
+<style>
+:root{--navy:#202b45;--cream:#fffaf1;--orange:#f08b45;--ink:#253047;--muted:#758096}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif}
+header{background:var(--navy);color:white;padding:22px max(20px,calc((100% - 1050px)/2));display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font-size:1.35rem;font-weight:800}.tag{font-size:.85rem;color:#dce4f4}
+main{max-width:1050px;margin:25px auto;padding:0 18px;display:grid;grid-template-columns:250px 1fr;gap:20px}
+.card{background:white;border:1px solid #eee5d8;border-radius:18px;padding:18px;box-shadow:0 5px 18px #28334b0a}
+h2{margin:0 0 14px;font-size:1.1rem}.profile{display:flex;align-items:center;gap:12px}.avatar{width:46px;height:46px;border-radius:50%;background:#ffe0c7;display:grid;place-items:center;font-size:1.5rem}
+nav button,.action{width:100%;border:0;background:transparent;text-align:left;padding:11px 12px;border-radius:10px;font:inherit;color:var(--ink);cursor:pointer}
+nav button.active,nav button:hover{background:#fff0e4;color:#a64e19}.muted{color:var(--muted);font-size:.9rem}.hero{background:linear-gradient(120deg,#202b45,#394c70);color:white;padding:23px;border-radius:18px;margin-bottom:18px}.hero h1{margin:0 0 6px;font-size:1.6rem}.hero p{margin:0;color:#e0e7f4}
+.composer textarea{width:100%;min-height:76px;border:1px solid #e6e1d9;border-radius:12px;padding:12px;font:inherit;resize:vertical}
+.primary{background:var(--orange);color:white;border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:700;cursor:pointer;margin-top:9px}
+.post{border-top:1px solid #f0ece6;padding:15px 0}.post:first-of-type{border:0}.posthead{display:flex;gap:10px;align-items:center}.post p{margin:10px 0}.chatbox{height:310px;overflow:auto;border:1px solid #eee5d8;border-radius:12px;padding:12px;background:#fffdf9}.bubble{background:#f2f4f8;border-radius:12px;padding:9px 12px;margin:8px 0;max-width:85%;width:max-content}.mine{background:#ffeadb;margin-left:auto}.chatrow{display:flex;gap:8px;margin-top:10px}.chatrow input{flex:1;min-width:0;border:1px solid #e6e1d9;border-radius:10px;padding:11px;font:inherit}
+.notice{background:#fff5e9;border:1px solid #f6ddc4;border-radius:12px;padding:12px;font-size:.88rem;color:#80502f;margin-top:14px}
+@media(max-width:700px){main{grid-template-columns:1fr;margin-top:15px}aside{order:2}header{padding:18px}.hero h1{font-size:1.35rem}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">🍜 เว็บเพื่อนกิน</div><div class="tag">พื้นที่ส่วนตัวสำหรับแก๊งเพื่อน</div></div><div>👋 สวัสดี, นัท</div></header>
+<main>
+<aside class="card">
+ <div class="profile"><div class="avatar">😎</div><div><b>นัท</b><div class="muted">สมาชิกกลุ่มเพื่อนกิน</div></div></div>
+ <hr style="border:0;border-top:1px solid #eee;margin:18px 0">
+ <nav><button class="active" data-page="home">🏠 หน้าแรก</button><button data-page="chat">💬 ห้องแชท</button><button data-page="members">👥 สมาชิก</button><button data-page="photos">📸 แชร์รูปภาพ</button></nav>
+ <div class="notice">🔒 ตัวอย่างเว็บไซต์ส่วนตัว ขณะนี้ยังไม่มีระบบล็อกอินหรือแชทออนไลน์จริง</div>
+</aside>
+<section>
+ <div class="hero"><h1>ยินดีต้อนรับสู่เว็บเพื่อนกิน! 🍜</h1><p>มุมเล็ก ๆ สำหรับพูดคุย แบ่งปันเรื่องราว และเก็บความทรงจำของเพื่อน ๆ</p></div>
+ <div id="content" class="card"></div>
+</section>
+</main>
+<script>
+const content=document.getElementById('content');
+const pages={
+home:`<h2>📝 กระดานข้อความ</h2><div class="composer"><textarea id="postText" placeholder="วันนี้มีอะไรอยากเล่าให้เพื่อนฟังไหม?"></textarea><button class="primary" id="postBtn">โพสต์ข้อความ</button></div><div id="posts"><div class="post"><div class="posthead"><div class="avatar">🥳</div><b>เพื่อนในกลุ่ม</b><span class="muted">· ตัวอย่าง</span></div><p>ยินดีต้อนรับทุกคนเข้าสู่เว็บเพื่อนกิน! ❤️</p></div></div>`,
+chat:`<h2>💬 ห้องแชทกลุ่มเพื่อน</h2><div class="chatbox" id="chatbox"><div class="bubble"><b>เพื่อน:</b> หวัดดีทุกคน 👋</div><div class="bubble mine"><b>นัท:</b> สวัสดีครับ 😁</div></div><div class="chatrow"><input id="chatInput" placeholder="พิมพ์ข้อความ..."><button class="primary" id="sendBtn" style="margin:0">ส่ง</button></div>`,
+members:`<h2>👥 สมาชิกกลุ่ม</h2><div class="post"><div class="profile"><div class="avatar">😎</div><div><b>นัท</b><div class="muted">ผู้สร้างตัวอย่างเว็บไซต์</div></div></div></div><p class="muted">เพิ่มรายชื่อเพื่อนของคุณได้เมื่อเชื่อมต่อระบบสมาชิก</p>`,
+photos:`<h2>📸 พื้นที่แชร์รูปภาพ</h2><p>เตรียมพื้นที่ไว้สำหรับแบ่งปันรูปภาพและความทรงจำของแก๊งเพื่อน</p><label class="muted">เลือกรูปจากอุปกรณ์ (แสดงตัวอย่างในหน้านี้เท่านั้น)</label><p><input type="file" id="photoInput" accept="image/*"></p><div id="preview"></div>`
+};
+function show(page){content.innerHTML=pages[page];document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+if(page==='home'){document.getElementById('postBtn').onclick=()=>{let t=document.getElementById('postText'),v=t.value.trim();if(!v)return;let p=document.createElement('div');p.className='post';p.textContent='😎 นัท · ตอนนี้ — '+v;document.getElementById('posts').prepend(p);t.value='';};}
+if(page==='chat'){let send=()=>{let i=document.getElementById('chatInput'),v=i.value.trim();if(!v)return;let b=document.createElement('div');b.className='bubble mine';b.textContent='นัท: '+v;document.getElementById('chatbox').append(b);i.value='';document.getElementById('chatbox').scrollTop=99999;};document.getElementById('sendBtn').onclick=send;document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')send()});}
+if(page==='photos')document.getElementById('photoInput').onchange=e=>{let f=e.target.files[0];if(!f)return;let img=document.createElement('img');img.src=URL.createObjectURL(f);img.style='max-width:100%;max-height:260px;border-radius:12px';document.getElementById('preview').replaceChildren(img);};
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.page));show('home');
+</script>
+</body></html>
